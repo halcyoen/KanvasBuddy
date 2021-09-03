@@ -21,9 +21,6 @@ class KBPresetChooser(PresetChooser):
 
     def __init__(self, parent=None):
         super(KBPresetChooser, self).__init__(parent)
-        # Hide buttons deemed excessive for this plugin
-        self.layout().itemAt(0).widget().layout().itemAt(4).itemAtPosition(0,0).widget().hide()
-        self.layout().itemAt(0).widget().layout().itemAt(4).itemAtPosition(0,1).widget().hide()
 
     def sizeHint(self):
         return QSize(260, 300)
