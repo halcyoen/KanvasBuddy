@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ActionCollection version="2" name="KanvasBuddy">
+    <Actions category="Scripts">
+        <text>KanvasBuddy</text>
+
+        <Action name="kanvasbuddy">
+        <icon></icon>
+        <text>Launch KanvasBuddy</text>
+        <whatsThis>Minimalist toolbar for Krita</whatsThis>
+        <toolTip>Minimalist toolbar for Krita</toolTip>
+        <iconText>KB</iconText>
+        <activationFlags>0</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut>ctrl+k</shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+
+        <Action name="KBPanel1">
+        <icon></icon>
+        <text>Open KB panel 1</text>
+        <whatsThis>Open KB panel 1</whatsThis>
+        <toolTip>Open KB panel 1</toolTip>
+        <iconText></iconText>
+        <activationFlags>0</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut>shift+1</shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+
+        <Action name="KBPanel2">
+        <icon></icon>
+        <text>Open KB panel 2</text>
+        <whatsThis>Open KB panel 2</whatsThis>
+        <toolTip>Open KB panel 2</toolTip>
+        <iconText></iconText>
+        <activationFlags>0</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut>shift+2</shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+
+        <Action name="KBPanel3">
+        <icon></icon>
+        <text>Open KB panel 3</text>
+        <whatsThis>Open KB panel 3</whatsThis>
+        <toolTip>Open KB panel 3</toolTip>
+        <iconText></iconText>
+        <activationFlags>0</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut>shift+3</shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+
+        <Action name="KBPanel4">
+        <icon></icon>
+        <text>Open KB panel 4</text>
+        <whatsThis>Open KB panel 4</whatsThis>
+        <toolTip>Open KB panel 4</toolTip>
+        <iconText></iconText>
+        <activationFlags>0</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut>shift+4</shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+
+        <Action name="KBPanel5">
+        <icon></icon>
+        <text>Open KB panel 5</text>
+        <whatsThis>Open KB panel 5</whatsThis>
+        <toolTip>Open KB panel 5</toolTip>
+        <iconText></iconText>
+        <activationFlags>0</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut>shift+5</shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+
+        <Action name="KBPanel6">
+        <icon></icon>
+        <text>Open KB panel 6</text>
+        <whatsThis>Open KB panel 6</whatsThis>
+        <toolTip>Open KB panel 6</toolTip>
+        <iconText></iconText>
+        <activationFlags>0</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut>shift+6</shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+
+        <Action name="KBPanel7">
+        <icon></icon>
+        <text>Open KB panel 7</text>
+        <whatsThis>Open KB panel 7</whatsThis>
+        <toolTip>Open KB panel 7</toolTip>
+        <iconText></iconText>
+        <activationFlags>0</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut>shift+7</shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+
+        <Action name="KBPanel8">
+        <icon></icon>
+        <text>Open KB panel 8</text>
+        <whatsThis>Open KB panel 8</whatsThis>
+        <toolTip>Open KB panel 8</toolTip>
+        <iconText></iconText>
+        <activationFlags>0</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut>shift+8</shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+
+        <Action name="KBPanel9">
+        <icon></icon>
+        <text>Open KB panel 9</text>
+        <whatsThis>Open KB panel 9</whatsThis>
+        <toolTip>Open KB panel 9</toolTip>
+        <iconText></iconText>
+        <activationFlags>0</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut>shift+9</shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+    </Actions>
+</ActionCollection>
