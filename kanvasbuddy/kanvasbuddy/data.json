@@ -156,7 +156,7 @@
         },
         "reloadPreset": {
             "id": "reload_preset_action",
-            "icon": "view_refresh"
+            "icon": "view-refresh"
         },
         "showGrid": {
             "id": "view_grid",
