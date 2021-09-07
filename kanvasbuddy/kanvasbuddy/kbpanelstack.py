@@ -70,6 +70,14 @@ class KBPanelStack(QStackedWidget):
                 self.panel(ID).setSizeHint(data['size'])
 
         self.navBtns.loadButton(data, self.panel(ID).activate)
+        self.appendShortcutAction(ID)
+
+    def appendShortcutAction(self, ID):
+        i = str(self.navBtns.count())
+        name = "KBPanel" + i
+        action = Application.activeWindow().createAction(name, "KanvasBuddy")
+        action.triggered.connect(self.panel(ID).activate)
+        action.triggered.connect(self.activateWindow)
         
 
     def dismantle(self):
