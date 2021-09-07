@@ -52,6 +52,8 @@ class KBButtonBar(QWidget):
         for btn in self._buttons:
             btn.setFixedSize(QSize(size, size))
 
+    def count(self):
+        return len(self._buttons)
 
     def button(self, ID):
         return self._buttons[ID]
