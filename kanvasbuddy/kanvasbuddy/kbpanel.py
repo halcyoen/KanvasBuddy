@@ -18,14 +18,15 @@ from PyQt5.QtCore import QSize
 
 class KBPanel(QWidget):
 
-    def __init__(self, widget):
+    def __init__(self, widget=None):
         super(KBPanel, self).__init__()
-        self.wdgt = widget
+        self.w = widget
         self.size = None
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(0, 0, 0, 0)
         self.layout().setSpacing(0)
-        self.layout().addWidget(self.wdgt)
+        if widget:
+            self.layout().addWidget(self.w)
 
 
     def activate(self):
@@ -33,7 +34,7 @@ class KBPanel(QWidget):
 
 
     def widget(self):
-        return self.wdgt
+        return self.w
 
 
     def setSizeHint(self, size):
@@ -44,7 +45,7 @@ class KBPanel(QWidget):
         if self.size:
             return self.size
         else:
-            return self.wdgt.sizeHint()
+            return self.w.sizeHint()
     
 
     

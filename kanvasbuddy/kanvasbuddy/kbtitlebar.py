@@ -13,13 +13,20 @@
 # You should have received a copy of the GNU General Public License
 # along with KanvasBuddy. If not, see <https://www.gnu.org/licenses/>.
 
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QToolButton, QStyle
-from PyQt5.QtGui import *
-from PyQt5.QtCore import QSize, Qt
-
 from krita import Krita
 
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QToolButton, QStyle
+from PyQt5.QtGui import QPalette, QColor
+from PyQt5.QtCore import QSize, Qt
+
+from .kbbutton import KBButton
+from .kbconfigmanager import KBConfigManager
+
 class KBTitleBar(QWidget):
+    _config = KBConfigManager()
+    _btnSize = int(_config.loadConfig('SIZES')['titleButtons'])
+    _btnIconSize = _btnSize-3
+    _fontSize = _btnSize-1
 
     def __init__(self, parent):
         super(KBTitleBar, self).__init__(parent)
@@ -28,33 +35,21 @@ class KBTitleBar(QWidget):
         self.layout.setContentsMargins(2, 1, 2, 1)
         self.pressing = False
 
-        self.title = QLabel("KanvasBuddy")
         font = self.font()
-        font.setPixelSize(9)
+        font.setPixelSize(self._fontSize)
+        self.title = QLabel("KanvasBuddy")
         self.title.setFont(font)
         self.title.setStyleSheet("""
             color: grey;
         """)
 
-        self.btn_close = QToolButton()
-        self.btn_close.setFixedSize(10, 10)
-        self.btn_close.setIconSize(QSize(7,7))
-        self.btn_close.clicked.connect(self.parent.close)
-        self.btn_close.setIcon(parent.style().standardIcon(QStyle.SP_DockWidgetCloseButton))
-        self.btn_close.setFocusPolicy(Qt.NoFocus)
-
-        self.btn_pinned_mode = QToolButton()
-        self.btn_pinned_mode.setCheckable(True)
-        self.btn_pinned_mode.setToolTip("Toggle pinned panel mode")
-        self.btn_pinned_mode.setFixedSize(10, 10)
-        self.btn_pinned_mode.setIconSize(QSize(7,7))
-        self.btn_pinned_mode.clicked.connect(self.parent.togglePinnedMode)
-        self.btn_pinned_mode.setIcon(Krita.instance().icon('light_krita_tool_reference_images.svg'))
-        self.btn_pinned_mode.setFocusPolicy(Qt.NoFocus)
+        self.pinnedMode = KBPinnedModeButton(self._btnSize, self._btnIconSize)
+        self.closeButton = KBCloseButton(self._btnSize, self._btnIconSize)
+        self.closeButton.clicked.connect(self.parent.close)
 
         self.layout.addWidget(self.title)
-        self.layout.addWidget(self.btn_pinned_mode)
-        self.layout.addWidget(self.btn_close)
+        self.layout.addWidget(self.pinnedMode)
+        self.layout.addWidget(self.closeButton)
         self.setLayout(self.layout)
 
 
@@ -74,5 +69,37 @@ class KBTitleBar(QWidget):
             self.start = self.end
 
 
-    def mouseReleaseEvent(self, QMouseEvent):
+    def mouseReleaseEvent(self, event):
         self.pressing = False
+
+
+class KBPinnedModeButton(KBButton):
+
+    def __init__(self, size, iconSize, parent=None):
+        super(KBPinnedModeButton, self).__init__(size, parent)
+        self.setCheckable(True)
+        self.setToolTip("Toggle pinned panel mode")
+        self.setIconSize(QSize(iconSize, iconSize))
+        self.setIcon(Krita.instance().icon('light_krita_tool_reference_images.svg'))
+        self.setChecked(self.pinnedModeIsChecked())
+        self.clicked.connect(self.togglePinnedMode)
+
+
+    def pinnedModeIsChecked(self):
+        if Application.readSetting("KanvasBuddy", "KBPinnedMode", "false") == "true":
+            return True
+
+        return False
+
+
+    def togglePinnedMode(self, checked):        
+        Application.writeSetting("KanvasBuddy", "KBPinnedMode", str(checked).lower())
+
+
+class KBCloseButton(KBButton):
+
+    def __init__(self, size, iconSize, parent=None):
+        super(KBCloseButton, self).__init__(size, parent)
+        self.setIconSize(QSize(iconSize, iconSize))
+        self.setIcon(self.window().style().standardIcon(QStyle.SP_DockWidgetCloseButton))
+        self.clicked.connect(self.window().close)

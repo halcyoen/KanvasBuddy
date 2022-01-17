@@ -24,26 +24,20 @@ class KBButtonBar(QWidget):
     def __init__(self, btnSize, parent=None):
         super(KBButtonBar, self).__init__(parent)
         self.setLayout(QHBoxLayout())
+        self.layout().setContentsMargins(0, 0, 0, 0)
 
         self._buttons = {}
         self.btnSize = btnSize
-        
-        self.layout().setContentsMargins(0, 0, 0, 0)
 
 
-    def addButton(self, ID):
-        self._buttons[ID] = KBButton(self.btnSize)
-        self._buttons[ID].setFocusPolicy(Qt.NoFocus)
-        self.layout().addWidget(self._buttons[ID])
-    
-
-    def loadButton(self, data, onClick):
+    def addButton(self, properties, onClick, toolTip="", checkable=False):
         btn = KBButton(self.btnSize)
-        btn.setFocusPolicy(Qt.NoFocus)
-        btn.setIcon(Application.icon(data['icon']))
-        btn.clicked.connect(onClick)
+        btn.setIcon(Application.icon(properties['icon']))
+        btn.clicked.connect(onClick) # collect and disconnect all when closing
+        btn.setToolTip(toolTip)
+        btn.setCheckable(checkable)
 
-        self._buttons[data['id']] = btn
+        self._buttons[properties['id']] = btn
         self.layout().addWidget(btn)
 
 
@@ -52,8 +46,10 @@ class KBButtonBar(QWidget):
         for btn in self._buttons:
             btn.setFixedSize(QSize(size, size))
 
+
     def count(self):
         return len(self._buttons)
+
 
     def button(self, ID):
         return self._buttons[ID]

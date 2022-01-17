@@ -14,16 +14,18 @@
 # along with KanvasBuddy. If not, see <https://www.gnu.org/licenses/>.
 
 from PyQt5.QtWidgets import QToolButton
-from PyQt5.QtGui import QIcon, QPixmap, QImage, QColor
-from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QIcon, QPixmap, QImage, QColor, QPalette
+from PyQt5.QtCore import QSize, Qt
 
 class KBButton(QToolButton):
 
-    def __init__(self, size, parent = None):
+    def __init__(self, size = 12, parent = None):
         super(KBButton, self).__init__(parent)
         self.setFixedSize(QSize(size, size))
+        self.setFocusPolicy(Qt.NoFocus)
+        self.highlightConnection = None
     
-    
+
     def setIcon(self, icon):
         if isinstance(icon, QIcon):
             super().setIcon(icon)
@@ -42,3 +44,20 @@ class KBButton(QToolButton):
             self.setIcon(pxmap)
         else:
             raise TypeError(f"Unable to set color of invalid type {type(color)}")
+
+
+    def setCheckable(self, checkable):
+        if checkable:
+            self.highlightConnection = self.toggled.connect(self.highlight)
+        else:
+            if self.highlightConnection:
+                self.disconnect(self.highlightConnection)
+                self.highlightConnection = None
+        return super().setCheckable(checkable)
+
+
+    def highlight(self, toggled):
+        p = self.window().palette()
+        if toggled:
+            p.setColor(QPalette.Button, p.color(QPalette.Highlight))
+        self.setPalette(p)

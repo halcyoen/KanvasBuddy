@@ -13,14 +13,19 @@
 # You should have received a copy of the GNU General Public License
 # along with KanvasBuddy. If not, see <https://www.gnu.org/licenses/>.
 
-from krita import PresetChooser
-
-from PyQt5.QtCore import QSize
+from krita import PresetChooser, Krita
+from PyQt5.QtCore import pyqtSignal
 
 class KBPresetChooser(PresetChooser):
+    presetChanged = pyqtSignal()
 
     def __init__(self, parent=None):
         super(KBPresetChooser, self).__init__(parent)
+        self.presetSelected.connect(self.brushPresetChanged)
+        self.presetClicked.connect(self.brushPresetChanged)
 
-    def sizeHint(self):
-        return QSize(260, 300)
+    def brushPresetChanged(self, preset):
+        Application.activeWindow().activeView().activateResource(
+            self.currentPreset()
+            )
+        self.presetChanged.emit()

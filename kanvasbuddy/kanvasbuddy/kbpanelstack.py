@@ -15,87 +15,74 @@
 
 from krita import Krita
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QStackedWidget, QSizePolicy
-from PyQt5.QtCore import QSize, QEvent, pyqtSignal
+from PyQt5.QtWidgets import QPushButton, QStackedWidget, QSizePolicy
+from PyQt5.QtCore import QSize, QEvent
 
-from .kbbuttonbar import KBButtonBar
 from .kbpanel import KBPanel
-from .kbpresetchooser import KBPresetChooser
+from .kbmainwidget import KBMainWidget
+from .kbborrowmanager import KBBorrowManager
+from .kbconfigmanager import KBConfigManager
 
 class KBPanelStack(QStackedWidget):
-    presetChanged = pyqtSignal()
 
     def __init__(self, parent=None):
         super(KBPanelStack, self).__init__(parent)
         super().currentChanged.connect(self.currentChanged)
         self._panels = {}
-        self._widgetParents = {}
-        self._pinned_mode = False
+        self._borrower = KBBorrowManager()
+        self.shortcutConnections = []
         
-        self.mainPanel = QWidget()
-        self.mainPanel.setLayout(QVBoxLayout())
-        self.mainPanel.layout().setContentsMargins(4, 4, 4, 4)
+        self._mainWidget = KBMainWidget()
+        self.addPanel('MAIN', self._mainWidget)
+        self.appendShortcutAction('MAIN')
+        self.initPanels()
 
-        self.navBtns = KBButtonBar(32)
 
-        self.mainPanel.layout().addWidget(self.navBtns)
-        self.addPanel('main', self.mainPanel)
+    def initPanels(self):
+        configManager = KBConfigManager()
+        panelConfig = configManager.loadConfig('DOCKERS')
+        properties = configManager.loadProperties('dockers')
+        for entry in panelConfig:
+            if panelConfig.getboolean(entry):
+                self.loadPanel(properties[entry])
 
 
     def addPanel(self, ID, widget):
         panel = KBPanel(widget)
 
         if self.count() > 0:
-            panel.layout().addWidget(KBPanelCloseButton())
+            backButton = KBPanelCloseButton(lambda: self.setCurrentIndex(0))
+            panel.layout().addWidget(backButton)
 
         self._panels[ID] = panel
         super().addWidget(panel)
 
 
-    def loadPanel(self, data):
-        ID = data['id']
-        if ID == 'PresetDocker': # This is ugly, but necessary until the Krita API opens a proper 'presetChanged' signal
-            pc = KBPresetChooser()
-            pc.presetSelected.connect(self.brushPresetChanged)
-            pc.presetClicked.connect(self.brushPresetChanged)
-            self.addPanel(ID, pc)
-        else:
-            qwindow = Krita.instance().activeWindow().qwindow()
-            parent = qwindow.findChild(QWidget, ID)
+    def loadPanel(self, properties):
+        ID = properties['id']        
+        widget = self._borrower.borrowDockerWidget(ID)
+        title = self._borrower.dockerWindowTitle(ID)
 
-            self._widgetParents[ID] = parent
-            self.addPanel(ID, parent.widget())
-
-            if data['size']:
-                self.panel(ID).setSizeHint(data['size'])
-
-        self.navBtns.loadButton(data, self.panel(ID).activate)
+        self.addPanel(ID, widget)
+        if properties['size']:
+            self.panel(ID).setSizeHint(properties['size'])
+        if ID == 'PresetDocker':
+            widget.presetChanged.connect(self._mainWidget.synchronizeSliders)
+            
+        self._mainWidget.addDockerButton(properties, self.panel(ID).activate, title)
         self.appendShortcutAction(ID)
 
+
     def appendShortcutAction(self, ID):
-        i = str(self.navBtns.count())
+        i = str(self.count() - 1)  #account for main panel
         name = "KBPanel" + i
         action = Application.activeWindow().createAction(name, "KanvasBuddy")
-        action.triggered.connect(self.panel(ID).activate)
-        action.triggered.connect(self.activateWindow)
-        
-
-    def dismantle(self):
-        for parent in self._widgetParents:
-            self._widgetParents[parent].setWidget(self.panel(parent).widget())
-            self._widgetParents[parent].widget().setEnabled(True)
-
-
-    def panel(self, name):
-        return self._panels[name]
-
-
-    def main(self):
-        return self.mainPanel
-
-
-    def togglePinnedMode(self):
-        self._pinned_mode = not self._pinned_mode
+        self.shortcutConnections.append(
+            action.triggered.connect(self.panel(ID).activate)
+        )
+        self.shortcutConnections.append(
+            action.triggered.connect(lambda: self.activateWindow())
+        )
 
 
     def currentChanged(self, index):
@@ -112,29 +99,36 @@ class KBPanelStack(QStackedWidget):
 
         self.adjustSize()
         self.parentWidget().adjustSize()
-        
     
+
     def event(self, e):
         r = super().event(e) # Get the return value of the parent class' event method first
-        if (e.type() == QEvent.WindowDeactivate and
-            not self._pinned_mode):
+        pinned = Application.readSetting("KanvasBuddy", "KBPinnedMode", "false")
+
+        if (e.type() == QEvent.WindowDeactivate and pinned == "false"):
             self.setCurrentIndex(0)
         
         return r
+    
+    
+    def dismantle(self):
+        self._borrower.returnAll()
+        for c in self.shortcutConnections:
+            self.disconnect(c)
 
 
-    def brushPresetChanged(self, preset):
-        Krita.instance().activeWindow().activeView().activateResource(
-            self.panel('PresetDocker').widget().currentPreset()
-            )
-        self.presetChanged.emit()
+    def panel(self, name):
+        return self._panels[name]
 
 
 class KBPanelCloseButton(QPushButton):
+    _config = KBConfigManager()
+    _height = int(_config.loadConfig('SIZES')['dockerBack'])
+    _iconSize = _height-2
 
-    def __init__(self, parent=None):
+    def __init__(self, onClick, parent=None):
         super(KBPanelCloseButton, self).__init__(parent)
         self.setIcon(Krita.instance().action('move_layer_up').icon())
-        self.setIconSize(QSize(10, 10))
-        self.setFixedHeight(12)
-        self.clicked.connect(lambda: self.parentWidget().parentWidget().setCurrentIndex(0))
+        self.setIconSize(QSize(self._iconSize, self._iconSize))
+        self.setFixedHeight(self._height)
+        self.clicked.connect(onClick)

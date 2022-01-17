@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout
 
 class KBSliderBar(QWidget):
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super(KBSliderBar, self).__init__(parent)
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(2, 0, 2, 0)
@@ -32,11 +32,6 @@ class KBSliderBar(QWidget):
             'brushFlow': KBFlowSlider,
             'brushSize': KBSizeSlider
         }
-
-
-    def createSlider(self, ID, min, max): # Redundant now?
-        self._sliders[ID] = KBSliderSpinBox(min, max)
-        self.layout().addWidget(self._sliders[ID])
 
 
     def addSlider(self, ID):
