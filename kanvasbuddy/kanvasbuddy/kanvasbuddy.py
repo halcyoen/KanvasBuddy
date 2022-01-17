@@ -15,7 +15,6 @@
 
 # CONTRIBUTORS:
 # Kapyia @ https://krita-artists.org/ 
-# halcyoen @ https://krita-artists.org/
 
 import importlib
 
