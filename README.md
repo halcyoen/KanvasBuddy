@@ -1,4 +1,4 @@
-#### unofficial patched version of kanvasbuddy for krita 5
+### unofficial patched version of kanvasbuddy for krita 5
 
 for more information on kanvasbuddy see https://github.com/Kapyia/KanvasBuddy
 
