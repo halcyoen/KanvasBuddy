@@ -16,6 +16,19 @@
         <statusTip></statusTip>
         </Action>
 
+        <Action name="KBPanel0">
+        <icon></icon>
+        <text>Open KB main panel</text>
+        <whatsThis>Open KB main panel</whatsThis>
+        <toolTip>Open KB main panel</toolTip>
+        <iconText></iconText>
+        <activationFlags>0</activationFlags>
+        <activationConditions>0</activationConditions>
+        <shortcut>shift+§</shortcut>
+        <isCheckable>false</isCheckable>
+        <statusTip></statusTip>
+        </Action>
+
         <Action name="KBPanel1">
         <icon></icon>
         <text>Open KB panel 1</text>
