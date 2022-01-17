@@ -15,6 +15,7 @@
 
 # CONTRIBUTORS:
 # Kapyia @ https://krita-artists.org/ 
+# halcyoen @ https://krita-artists.org/
 
 import importlib
 
@@ -37,7 +38,7 @@ class KanvasBuddy(Extension):
         action = window.createAction("kanvasbuddy", "KanvasBuddy")
         action.setToolTip("A floating minimalist GUI")
         action.triggered.connect(self.launchInterface)
-
+        
 
     def launchInterface(self):
         if not Krita.instance().activeDocument():
