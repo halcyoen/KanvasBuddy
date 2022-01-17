@@ -14,7 +14,8 @@
 # along with KanvasBuddy. If not, see <https://www.gnu.org/licenses/>.
 
 # CONTRIBUTORS:
-# Kapyia @ https://krita-artists.org/ 
+# Kapyia @ https://krita-artists.org/
+# halcyoen @ https://krita-artists.org/
 
 import importlib
 
