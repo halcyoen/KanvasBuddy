@@ -55,13 +55,15 @@ class KBSliderSpinBox(QWidget):
         if e.buttons() == Qt.LeftButton:
             self.setFocus()
             delta = e.pos().x() / self.width()
-            self.spinbox.setValue(delta**self.scaling * self.spinbox.maximum())
-            self.progbar.setValue(delta * self.progbar.maximum())
+            spinboxValue = int(delta**self.scaling * self.spinbox.maximum())
+            progbarValue = int(delta * self.progbar.maximum())
+            self.spinbox.setValue(spinboxValue)
+            self.progbar.setValue(progbarValue)
 
 
     def updateProgBar(self):
         delta = (self.spinbox.value() / self.spinbox.maximum())**(1./self.scaling)
-        self.progbar.setValue(delta * self.progbar.maximum())
+        self.progbar.setValue(int(delta * self.progbar.maximum()))
 
 
     def mouseMoveEvent(self, e):
@@ -112,7 +114,7 @@ class KBSliderSpinBox(QWidget):
 
 
     def setValue(self, val):
-        self.spinbox.setValue(val)
+        self.spinbox.setValue(int(val))
         self.updateProgBar()
 
 
